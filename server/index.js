@@ -2,6 +2,7 @@
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 const callOpenRouterModel = require("./modelRouter");
@@ -9,7 +10,10 @@ const callOpenRouterModel = require("./modelRouter");
 const app = express();
 const PORT = 3000;
 
+app.use(cors()); // ✅ Allow requests from React frontend
 app.use(bodyParser.json());
+
+// ✅ Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /**
@@ -49,16 +53,19 @@ app.post("/api/chat", async (req, res) => {
   if (!model || !prompt) {
     return res.status(400).json({ error: "Model and prompt are required" });
   }
+// ✅ Append instruction to make response paragraph-style and longer
+  prompt = `Please write a detailed paragraph of at least 100 words in response to the following question:\n\n${prompt}`;
 
   try {
     const result = await callOpenRouterModel(model, prompt);
     res.json({ content: result.choices[0].message.content });
   } catch (err) {
-    console.error(err.response?.data || err.message);
+    console.error("OpenRouter Error:", err.response?.data || err.message);
     res.status(500).json({ error: "Failed to get response from OpenRouter" });
   }
 });
 
+// ✅ Start the server
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
   console.log(`📄 Swagger UI at http://localhost:${PORT}/api-docs`);
