@@ -12,7 +12,7 @@ export default function ChatBox() {
     "openai/gpt-3.5-turbo",
     "openai/gpt-4",
     "meta-llama/llama-2-70b-chat",
-    "google/gemini-pro"
+    "google/gemini-2.0-flash-001"  
   ];
 
   const handleSubmit = async (e) => {
@@ -46,7 +46,7 @@ export default function ChatBox() {
   return (
     <div className="h-screen w-screen bg-gray-100 flex flex-col">
       <header className="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-blue-600">🧠 OpenRouter Chat Interface</h1>
+        <h1 className="text-xl font-bold text-blue-600">🧠 Chatbot</h1>
         <select
           value={model}
           onChange={(e) => setModel(e.target.value)}

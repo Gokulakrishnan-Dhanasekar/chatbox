@@ -53,8 +53,6 @@ app.post("/api/chat", async (req, res) => {
   if (!model || !prompt) {
     return res.status(400).json({ error: "Model and prompt are required" });
   }
-// ✅ Append instruction to make response paragraph-style and longer
-  prompt = `Please write a detailed paragraph of at least 100 words in response to the following question:\n\n${prompt}`;
 
   try {
     const result = await callOpenRouterModel(model, prompt);
