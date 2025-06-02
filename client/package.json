@@ -6,13 +6,11 @@
     "axios": "^1.9.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-scripts": "5.0.1",
-    "serve": "^14.2.4"
+    "react-scripts": "5.0.1"
   },
-"scripts": {
-  "start": "serve -s build",
-  "build": "react-scripts build"
-},
+  "scripts": {
+    "start": "react-scripts start"
+  },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.21",
