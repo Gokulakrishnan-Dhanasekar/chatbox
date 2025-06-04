@@ -205,34 +205,34 @@ const handleSubmit = async (e) => {
       {/* Stars overlay */}
       <div className="stars"></div>
 
-      <div className="h-screen w-screen flex relative z-10 bg-gradient-to-b from-[#0b1d38] to-[#000010] text-white">
+      <div className="h-screen w-screen flex relative z-10 bg-gradient-to-b from-[#0b1d38] to-[#000010] text-black">
         
         {/* Sidebar */}
         <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
           fixed inset-y-0 left-0 z-50 w-64 bg-black bg-opacity-90 backdrop-blur-sm 
           transform transition-transform duration-300 ease-in-out
-          md:relative md:translate-x-0 border-r border-gray-700`}>
+          md:relative md:translate-x-0 border-r border-gray-700 flex flex-col`}>
           
           {/* Sidebar Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-700">
+          <div className="flex items-center justify-between p-4 border-b border-gray-700 flex-shrink-0">
             <button
               onClick={createNewChat}
               className="flex items-center gap-2 px-3 py-2 bg-purple-600 hover:bg-purple-700 
-                rounded-lg text-sm font-medium transition-colors duration-200 flex-1"
+                rounded-lg text-sm font-medium transition-colors duration-200 flex-1 text-white"
             >
               <span className="text-lg">+</span>
               New Chat
             </button>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="md:hidden ml-2 p-2 hover:bg-gray-800 rounded-lg transition-colors"
+              className="md:hidden ml-2 p-2 hover:bg-gray-800 rounded-lg transition-colors text-white"
             >
               <span className="text-lg">×</span>
             </button>
           </div>
 
-          {/* Chat History */}
-          <div className="flex-1 overflow-y-auto scrollbar-custom p-2">
+          {/* Chat History - Now with proper scroll */}
+          <div className="flex-1 overflow-y-auto scrollbar-custom p-2 min-h-0">
             <div className="space-y-1">
               {chatSessions.map((chat) => (
                 <div
@@ -269,7 +269,7 @@ const handleSubmit = async (e) => {
                         }}
                         className="text-green-400 hover:text-green-300"
                       >
-                        <Check size={14} />
+                        ✓
                       </button>
                     </div>
                   ) : (
@@ -297,23 +297,6 @@ const handleSubmit = async (e) => {
               ))}
             </div>
           </div>
-
-          {/* Model Selector */}
-          <div className="p-4 border-t border-gray-700">
-            <label className="block text-xs text-gray-400 mb-2">Current Model</label>
-            <select
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white text-xs 
-                focus:outline-none focus:ring-2 focus:ring-purple-400"
-            >
-              {availableModels.map((m) => (
-                <option key={m} value={m} className="text-black">
-                  {m}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
 
         {/* Overlay for mobile */}
@@ -332,7 +315,7 @@ const handleSubmit = async (e) => {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="md:hidden p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                className="md:hidden p-2 hover:bg-gray-800 rounded-lg transition-colors text-white"
               >
                 <span className="text-lg">☰</span>
               </button>
@@ -363,7 +346,7 @@ const handleSubmit = async (e) => {
                 className={`max-w-full sm:max-w-[80%] px-3 sm:px-4 py-2 sm:py-3 rounded-lg break-words ${
                   msg.role === "user"
                     ? "bg-purple-900 bg-opacity-80 text-white self-end ml-auto"
-                    : "bg-black bg-opacity-70 self-start mr-auto border border-gray-700 text-purple-300"
+                    : "bg-white bg-opacity-90 self-start mr-auto border border-gray-300 text-black"
                 }`}
               >
                 <p className="whitespace-pre-line text-xs sm:text-sm leading-relaxed">
@@ -373,7 +356,7 @@ const handleSubmit = async (e) => {
             ))}
             
             {loading && (
-              <div className="text-xs sm:text-sm text-gray-400 bg-black bg-opacity-70 border border-gray-700 px-4 py-2 rounded-lg w-max animate-pulse">
+              <div className="text-xs sm:text-sm text-gray-600 bg-white bg-opacity-90 border border-gray-300 px-4 py-2 rounded-lg w-max animate-pulse">
                 Thinking...
               </div>
             )}
@@ -381,27 +364,50 @@ const handleSubmit = async (e) => {
           
 
           {/* Input Form */}
-          <div className="bg-black bg-opacity-70 border-t border-gray-700 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-center gap-2 sm:gap-3 relative">
-            <input
-              type="text"
-              placeholder="Type your message..."
-              className="w-full max-w-full sm:max-w-xl border border-gray-600 rounded-lg px-3 sm:px-4 py-2 sm:py-2 text-xs sm:text-sm bg-black bg-opacity-50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSubmit(e);
-                }
-              }}
-            />
-            <button
-              type="submit"
-              disabled={loading || !prompt.trim()}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition duration-200 disabled:opacity-50"
-            >
-              Send
-            </button>
+          <div className="bg-black bg-opacity-70 border-t border-gray-700 px-4 sm:px-6 py-3 sm:py-4 relative">
+            {/* Model Selector */}
+            <div className="flex items-center justify-center mb-3">
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-gray-400">Model:</label>
+                <select
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  className="border border-gray-600 rounded px-3 py-1 bg-black bg-opacity-70 text-white text-xs 
+                    focus:outline-none focus:ring-2 focus:ring-purple-400"
+                >
+                  {availableModels.map((m) => (
+                    <option key={m} value={m} className="text-black bg-white">
+                      {m}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            
+            {/* Input row */}
+            <div className="flex items-center justify-center gap-2 sm:gap-3">
+              <input
+                type="text"
+                placeholder="Type your message..."
+                className="w-full max-w-full sm:max-w-xl border border-gray-600 rounded-lg px-3 sm:px-4 py-2 sm:py-2 text-xs sm:text-sm bg-black bg-opacity-50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit(e);
+                  }
+                }}
+              />
+              <button
+                type="submit"
+                disabled={loading || !prompt.trim()}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition duration-200 disabled:opacity-50"
+                onClick={handleSubmit}
+              >
+                Send
+              </button>
+            </div>
           </div>
         </div>
       </div>
