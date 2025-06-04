@@ -58,8 +58,15 @@ app.post("/api/chat", async (req, res) => {
     const result = await callOpenRouterModel(model, prompt);
     res.json({ content: result.choices[0].message.content });
   } catch (err) {
-    console.error("OpenRouter Error:", err.response?.data || err.message);
-    res.status(500).json({ error: "Failed to get response from OpenRouter" });
+    console.error("OpenRouter Error:", {
+      message: err.message,
+      code: err.code,
+      response: err.response?.data,
+    });
+
+    res.status(500).json({
+      error: err.response?.data?.error || err.message || "Failed to get response from OpenRouter",
+    });
   }
 });
 
