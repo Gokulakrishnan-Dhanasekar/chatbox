@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+.loader {
+  border-top-color: #9f7aea; /* purple-400 */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
