@@ -3,21 +3,50 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const path = require("path");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 const callOpenRouterModel = require("./modelRouter");
 
 const app = express();
-const PORT = process.env.PORT || 3000; // ✅ Use Railway's dynamic port
+const PORT = 3000;
 
-app.use(cors());
+app.use(cors()); // ✅ Allow requests from React frontend
 app.use(bodyParser.json());
 
-// ✅ Swagger UI (for development or leave in production)
+// ✅ Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// ✅ Chat API
+/**
+ * @swagger
+ * /api/chat:
+ *   post:
+ *     summary: Send prompt to OpenRouter AI model
+ *     tags: [Chat]
+ *     requestBody:
+ *       description: Provide model and prompt
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - model
+ *               - prompt
+ *             properties:
+ *               model:
+ *                 type: string
+ *                 example: mistralai/mistral-7b-instruct
+ *               prompt:
+ *                 type: string
+ *                 example: What is the capital of France?
+ *     responses:
+ *       200:
+ *         description: The OpenRouter model response
+ *       400:
+ *         description: Missing input
+ *       500:
+ *         description: OpenRouter API error
+ */
 app.post("/api/chat", async (req, res) => {
   const { model, prompt } = req.body;
 
@@ -29,28 +58,13 @@ app.post("/api/chat", async (req, res) => {
     const result = await callOpenRouterModel(model, prompt);
     res.json({ content: result.choices[0].message.content });
   } catch (err) {
-    console.error("OpenRouter Error:", {
-      message: err.message,
-      code: err.code,
-      response: err.response?.data,
-    });
-
-    res.status(500).json({
-      error: err.response?.data?.error || err.message || "Failed to get response from OpenRouter",
-    });
+    console.error("OpenRouter Error:", err.response?.data || err.message);
+    res.status(500).json({ error: "Failed to get response from OpenRouter" });
   }
 });
 
-// ✅ Serve React frontend in production
-const clientBuildPath = path.join(__dirname, "../client/build");
-app.use(express.static(clientBuildPath));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(clientBuildPath, "index.html"));
-});
-
-// ✅ Start server
+// ✅ Start the server
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-  console.log(`📄 Swagger UI available at /api-docs`);
+  console.log(`✅ Server running at http://localhost:${PORT}`);
+  console.log(`📄 Swagger UI at http://localhost:${PORT}/api-docs`);
 });
