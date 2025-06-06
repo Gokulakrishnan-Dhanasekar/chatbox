@@ -12,7 +12,7 @@ export default function ChatInput({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col sm:flex-row items-center gap-2 p-3 border-t border-gray-700 bg-black bg-opacity-70"
+      className="flex flex-col sm:flex-row items-center gap-10 p-3 border-t border-blue-600 bg-black bg-opacity-70"
     >
       <select
         value={model}

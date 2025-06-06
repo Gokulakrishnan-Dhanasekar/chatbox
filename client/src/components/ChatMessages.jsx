@@ -2,7 +2,7 @@ import React from "react";
 
 export default function ChatMessages({ messages, loading }) {
   return (
-    <main className="flex-1 overflow-y-auto scrollbar-custom px-3 sm:px-6 py-4 sm:py-6 space-y-4 max-h-[calc(100vh-160px)]">
+    <main className="flex-1 overflow-y-auto scrollbar-custom px-3 sm:px-6 py-4 sm:py-6 space-y-4">
       {messages.length === 0 && !loading && (
         <div className="text-gray-400 italic text-center mt-10">
           Start the conversation by typing a message below.

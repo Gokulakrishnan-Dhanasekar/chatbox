@@ -162,7 +162,7 @@ export default function ChatBox() {
   const currentChat = chatSessions.find(c => c.id === currentChatId);
 
   return (
-    <div className="flex h-screen w-screen bg-gradient-to-b from-purple-900 via-purple-800  text-white relative overflow-hidden">
+    <div className="flex h-screen w-screen bg-gradient-to-b from-purple-900 via-purple-800 text-white relative overflow-hidden">
       <StarsBackground />
 
       <Sidebar
