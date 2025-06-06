@@ -131,7 +131,7 @@ export default function ChatBox() {
 
   try {
     // Send request to your actual backend
-    const res = await axios.post("http://localhost:3000/api/chat", {
+    const res = await axios.post("https://chatbox-production-b9ec.up.railway.app/api/chat", {
       model,
       prompt,
     });
